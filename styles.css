@@ -11,6 +11,7 @@ body {
     color: white;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     transition: background-image 0.5s ease-in-out;
+    flex-direction: column; 
 }
 
 body.loading::before {
@@ -38,7 +39,7 @@ body.loading::after {
     font-size: 24px;
 }
 
-#container {
+#container, #earningsContainer {
     background-color: rgba(0,0,0,0.6);
     backdrop-filter: blur(10px);
     padding: 30px;
@@ -46,11 +47,20 @@ body.loading::after {
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
     max-width: 500px;
     width: 90%;
+    margin-bottom: 20px;
 }
 
-#countdown, #earnings {
-    font-size: 20px;
-    margin: 15px 0;
+#earningsContainer {
+    background-color: rgba(255, 215, 0, 0.2); /* 金色背景，透明度降低 */
+    border: 2px solid #FFD700; /* 添加金色边框 */
+}
+
+#earnings {
+    font-size: 24px; /* 增大字体大小 */
+    color: #FFD700; /* 保持金色文字 */
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* 添加文字阴影增强可读性 */
 }
 
 #settingsBtn {
@@ -110,6 +120,7 @@ body.loading::after {
 .progress-week { background-color: #4ECDC4; }
 .progress-month { background-color: #45B7D1; }
 .progress-year { background-color: #FFA07A; }
+.progress-retirement { background-color: #9B59B6; }
 
 #settingsPanel h2 {
     margin-top: 0;
