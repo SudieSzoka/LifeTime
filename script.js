@@ -40,8 +40,19 @@ function saveSettings() {
 }
 
 // 设置背景图片
+let lastBackgroundUrl = '';
+
 function setRandomBackground() {
     const imageUrl = `https://source.unsplash.com/random/1920x1080/?nature,landscape`;
+    
+    // 添加加载指示器
+    document.body.classList.add('loading');
+    
+    // 如果有上一次的背景图片，先显示它
+    if (lastBackgroundUrl) {
+        document.body.style.backgroundImage = `url('${lastBackgroundUrl}')`;
+    }
+
     fetch(imageUrl)
         .then(response => {
             if (!response.ok) {
@@ -52,7 +63,11 @@ function setRandomBackground() {
         .then(url => {
             const img = new Image();
             img.onload = function() {
+                // 使用 CSS 过渡效果
+                document.body.style.transition = 'background-image 0.5s ease-in-out';
                 document.body.style.backgroundImage = `url('${url}')`;
+                lastBackgroundUrl = url;
+                document.body.classList.remove('loading');
             };
             img.onerror = function() {
                 throw new Error('Failed to load image');
@@ -61,10 +76,8 @@ function setRandomBackground() {
         })
         .catch(error => {
             console.error('Error setting background image:', error);
-            // 使用备用图片 URL 或设置背景颜色
             document.body.style.backgroundImage = `url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&h=1080')`;
-            // 或者使用纯色背景
-            // document.body.style.backgroundColor = '#34495e';
+            document.body.classList.remove('loading');
         });
 }
 
@@ -141,11 +154,14 @@ function init() {
     loadSettings();
     setInterval(updateUI, 60000); // 每分钟更新一次UI
 
-    document.getElementById('settingsBtn').addEventListener('click', () => {
-        document.getElementById('settingsPanel').classList.toggle('hidden');
+    document.getElementById('settingsBtn').addEventListener('click', showSettings);
+
+    document.getElementById('saveSettings').addEventListener('click', () => {
+        saveSettings();
+        hideSettings();
     });
 
-    document.getElementById('saveSettings').addEventListener('click', saveSettings);
+    document.getElementById('closeSettings').addEventListener('click', hideSettings);
 
     // 填充设置面板的初始值
     document.getElementById('dailyEarnings').value = settings.dailyEarnings;
@@ -159,4 +175,19 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
     init();
+}
+
+function showSettings() {
+    document.getElementById('settingsPanel').classList.remove('hidden');
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
+}
+
+function hideSettings() {
+    document.getElementById('settingsPanel').classList.add('hidden');
+    const overlay = document.querySelector('.overlay');
+    if (overlay) {
+        overlay.remove();
+    }
 }

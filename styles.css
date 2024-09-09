@@ -10,10 +10,37 @@ body {
     align-items: center;
     color: white;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    transition: background-image 0.5s ease-in-out;
+}
+
+body.loading::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+}
+
+body.loading::after {
+    content: 'Loading...';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 24px;
 }
 
 #container {
     background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
@@ -57,6 +84,7 @@ body {
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
     max-width: 400px;
     width: 90%;
+    z-index: 1000;
 }
 
 .hidden {
@@ -119,4 +147,26 @@ body {
 
 #saveSettings:hover {
     background-color: #2980b9;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 999;
+}
+
+#closeSettings {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
 }
