@@ -1,0 +1,19 @@
+{
+    "manifest_version": 3,
+    "name": "时间与收入追踪器",
+    "version": "1.0",
+    "description": "显示时间倒计时和每日收入",
+    "action": {
+      "default_icon": "icon.png"
+    },
+    "permissions": [
+      "storage",
+      "https://source.unsplash.com/"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "chrome_url_overrides": {
+      "newtab": "newtab.html"
+    }
+  }
