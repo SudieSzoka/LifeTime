@@ -40,6 +40,8 @@ function applySettings() {
         document.body.style.backgroundImage = `url('${settings.backgroundImage}')`;
     }
     updateUI();
+    // 强制立即更新倒计时和进度条
+    updateCountdown();
 }
 
 // 保存设置
@@ -48,6 +50,7 @@ function saveSettings() {
     settings.workStartTime = document.getElementById('workStartTime').value;
     settings.workEndTime = document.getElementById('workEndTime').value;
     settings.retirementYear = parseInt(document.getElementById('retirementYear').value);
+    settings.careerStartYear = parseInt(document.getElementById('careerStartYear').value); // 新增
 
     const backgroundImageInput = document.getElementById('backgroundImage');
     const file = backgroundImageInput.files[0];
@@ -80,16 +83,13 @@ function saveSettingsToStorage() {
 // 新增 onSettingsSaved 函数
 function onSettingsSaved() {
     document.getElementById('settingsPanel').classList.add('hidden');
-    updateUI();
-    if (settings.backgroundImage) {
-        document.body.style.backgroundImage = `url('${settings.backgroundImage}')`;
-    }
+    applySettings(); // 使用 applySettings 替代 updateUI
 }
 
 // 设置背景图片
 let lastBackgroundUrl = '';
 
-function setRandomBackground() {
+function setRandomBackground(retryCount = 0) {
     if (settings.backgroundImage) {
         document.body.style.backgroundImage = `url('${settings.backgroundImage}')`;
         return;
@@ -98,38 +98,39 @@ function setRandomBackground() {
     const imageUrl = `https://source.unsplash.com/random/1920x1080/?nature,landscape&t=${Date.now()}`;
     const defaultImageUrl = 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&h=1080';
     
-    //document.body.classList.add('loading');
-    
-    if (lastBackgroundUrl) {
-        document.body.style.backgroundImage = `url('${lastBackgroundUrl}')`;
-    } else {
-        document.body.style.backgroundImage = `url('${defaultImageUrl}')`;
-    }
+    document.body.style.backgroundImage = `url('${defaultImageUrl}')`;
 
     fetch(imageUrl)
         .then(response => {
+            console.log('Fetch response:', response);
             if (!response.ok) {
-                throw new Error('Failed to fetch image');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.url;
         })
         .then(url => {
+            console.log('Image URL:', url);
             const img = new Image();
             img.onload = function() {
+                console.log('Image loaded successfully');
                 document.body.style.transition = 'background-image 0.5s ease-in-out';
                 document.body.style.backgroundImage = `url('${url}')`;
                 lastBackgroundUrl = url;
-                document.body.classList.remove('loading');
             };
-            img.onerror = function() {
+            img.onerror = function(e) {
+                console.error('Image load error:', e);
                 throw new Error('Failed to load image');
             };
             img.src = url;
         })
         .catch(error => {
-            console.warn('Error setting background image:', error);
-            document.body.style.backgroundImage = `url('${defaultImageUrl}')`;
-            document.body.classList.remove('loading');
+            console.error('Error setting background image:', error);
+            if (retryCount < 3) {
+                console.log(`Retrying... Attempt ${retryCount + 1}`);
+                setTimeout(() => setRandomBackground(retryCount + 1), 1000);
+            } else {
+                console.warn('Max retry attempts reached. Using default background.');
+            }
         });
 }
 
@@ -148,13 +149,14 @@ function updateCountdown() {
 
     const totalCareerYears = settings.retirementYear - settings.careerStartYear;
     const yearsWorked = now.getFullYear() - settings.careerStartYear;
+    const yearsLeft = settings.retirementYear - now.getFullYear();
 
     const progress = {
         day: ((24 - timeLeft.day) / 24) * 100,
         week: ((7 - timeLeft.week) / 7) * 100,
         month: ((new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() - timeLeft.month) / new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()) * 100,
         year: ((365 - Math.ceil(timeLeft.year / (1000 * 60 * 60 * 24))) / 365) * 100,
-        retirement: (yearsWorked / totalCareerYears) * 100
+        retirement: ((yearsWorked / totalCareerYears) * 100).toFixed(2)
     };
 
     countdownElement.innerHTML = `
@@ -166,7 +168,7 @@ function updateCountdown() {
         <div class="progress-bar"><div class="progress progress-month" style="width: ${progress.month}%"></div></div>
         <p>今年还剩 ${Math.ceil(timeLeft.year / (1000 * 60 * 60 * 24))} 天</p>
         <div class="progress-bar"><div class="progress progress-year" style="width: ${progress.year}%"></div></div>
-        <p>还有 ${totalCareerYears-yearsWorked} 年退休</p>
+        <p>还有 ${yearsLeft} 年退休</p>
         <div class="progress-bar"><div class="progress progress-retirement" style="width: ${progress.retirement}%"></div></div>
     `;
 }

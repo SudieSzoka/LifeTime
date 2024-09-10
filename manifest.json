@@ -1,19 +1,16 @@
 {
     "manifest_version": 3,
-    "name": "时间与收入追踪器",
+    "name": "今天赚了多少钱",
     "version": "1.0",
-    "description": "显示时间倒计时和每日收入",
-    "action": {
-      "default_icon": "icon.png"
-    },
+    "description": "在新标签页显示时间和收入信息",
     "permissions": [
-      "storage",
-      "https://source.unsplash.com/"
+      "storage"
     ],
-    "background": {
-      "service_worker": "background.js"
-    },
+    "host_permissions": [
+      "https://source.unsplash.com/*",
+      "https://images.unsplash.com/*"
+    ],
     "chrome_url_overrides": {
       "newtab": "newtab.html"
-    }
-  }
+    }  
+}
