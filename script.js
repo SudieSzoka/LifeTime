@@ -4,7 +4,8 @@ let settings = {
     workEndTime: '17:00',
     retirementYear: new Date().getFullYear() + 30, // 默认设置为30年后退休
     careerStartYear: new Date().getFullYear() - 5, // 新增：默认设置为5年前开始工作
-    backgroundImage: null
+    backgroundImage: null,
+    currencyType: 'CNY' // 添加默认货币类型
 };
 let currentQuote = ''; // 添加这行
 
@@ -51,6 +52,7 @@ function saveSettings() {
     settings.workEndTime = document.getElementById('workEndTime').value;
     settings.retirementYear = parseInt(document.getElementById('retirementYear').value);
     settings.careerStartYear = parseInt(document.getElementById('careerStartYear').value); // 新增
+    settings.currencyType = document.getElementById('currencyType').value; // 添加这行
 
     const backgroundImageInput = document.getElementById('backgroundImage');
     const file = backgroundImageInput.files[0];
@@ -89,48 +91,51 @@ function onSettingsSaved() {
 // 设置背景图片
 let lastBackgroundUrl = '';
 
-function setRandomBackground(retryCount = 0) {
+function setRandomBackground() {
     if (settings.backgroundImage) {
         document.body.style.backgroundImage = `url('${settings.backgroundImage}')`;
         return;
     }
 
-    const imageUrl = `https://source.unsplash.com/random/1920x1080/?nature,landscape&t=${Date.now()}`;
-    const defaultImageUrl = 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&h=1080';
-    
-    document.body.style.backgroundImage = `url('${defaultImageUrl}')`;
+    const cachedBackgroundUrl = localStorage.getItem('lastBackgroundUrl');
+    if (cachedBackgroundUrl) {
+        document.body.style.backgroundImage = `url('${cachedBackgroundUrl}')`;
+    } else {
+        // 从本地图片文件夹随机选择一张图片
+        const localImages = ['image1.png']; // 替换为实际的图片文件名
+        const randomLocalImage = localImages[Math.floor(Math.random() * localImages.length)];
+        document.body.style.backgroundImage = `url('images/bgs/${randomLocalImage}')`;
+    }
+
+    // 尝试获取新的背景图片
+    fetchNewBackgroundImage();
+}
+
+function fetchNewBackgroundImage() {
+    const imageUrl = `https://picsum.photos/1920/1080?random=${Date.now()}`;
 
     fetch(imageUrl)
         .then(response => {
-            console.log('Fetch response:', response);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.url;
         })
         .then(url => {
-            console.log('Image URL:', url);
             const img = new Image();
             img.onload = function() {
-                console.log('Image loaded successfully');
                 document.body.style.transition = 'background-image 0.5s ease-in-out';
                 document.body.style.backgroundImage = `url('${url}')`;
-                lastBackgroundUrl = url;
+                localStorage.setItem('lastBackgroundUrl', url); // 缓存新的背景图片URL
             };
-            img.onerror = function(e) {
-                console.error('Image load error:', e);
-                throw new Error('Failed to load image');
+            img.onerror = function() {
+                console.warn('Failed to load image from web. Using local background.');
             };
             img.src = url;
         })
         .catch(error => {
-            console.error('Error setting background image:', error);
-            if (retryCount < 3) {
-                console.log(`Retrying... Attempt ${retryCount + 1}`);
-                setTimeout(() => setRandomBackground(retryCount + 1), 1000);
-            } else {
-                console.warn('Max retry attempts reached. Using default background.');
-            }
+            console.warn('Error fetching new background image:', error.message);
+            // 保持当前背景图片，不进行更改
         });
 }
 
@@ -214,7 +219,17 @@ function updateEarnings() {
     const progress = workedMs / totalWorkMs;
     const todayEarnings = settings.dailyEarnings * progress;
 
-    earningsElement.innerHTML = `今日已赚: ¥${todayEarnings.toFixed(2)}`;
+    const currencySymbols = {
+        'CNY': '¥',
+        'USD': '$',
+        'EUR': '€',
+        'GBP': '£',
+        'JPY': '¥'
+    };
+
+    const currencySymbol = currencySymbols[settings.currencyType] || '¥';
+
+    earningsElement.innerHTML = `今日已赚: ${currencySymbol}${todayEarnings.toFixed(2)}`;
 }
 
 // 删除 animateEarnings 函数，因为我们不再需要它了
@@ -246,6 +261,7 @@ function init() {
     document.getElementById('workEndTime').value = settings.workEndTime;
     document.getElementById('retirementYear').value = settings.retirementYear;
     document.getElementById('careerStartYear').value = settings.careerStartYear; // 新增
+    document.getElementById('currencyType').value = settings.currencyType; // 添加这行
 
     document.getElementById('backgroundImage').addEventListener('change', (event) => {
         const file = event.target.files[0];

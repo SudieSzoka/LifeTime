@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>时间与收入追踪器</title>
+    <title>今天赚了多少钱</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
@@ -21,10 +21,19 @@
         </div>
         <label>背景图片: <input type="file" id="backgroundImage" accept="image/*"></label>
         <label>每日收入: <input type="number" id="dailyEarnings" value="1000"></label>
+        <label>货币类型: 
+            <select id="currencyType">
+                <option value="CNY">人民币 (¥)</option>
+                <option value="USD">美元 ($)</option>
+                <option value="EUR">欧元 (€)</option>
+                <option value="GBP">英镑 (£)</option>
+                <option value="JPY">日元 (¥)</option>
+            </select>
+        </label>
         <label>工作开始时间: <input type="time" id="workStartTime" value="08:00"></label>
         <label>工作结束时间: <input type="time" id="workEndTime" value="17:00"></label>
         <label>退休年份: <input type="number" id="retirementYear"></label>
-        <label>职业开始年份: <input type="number" id="careerStartYear"></label> <!-- 新增 -->
+        <label>职业开始年份: <input type="number" id="careerStartYear"></label>
         <button id="saveSettings">保存</button>
     </div>
     <script src="script.js"></script>

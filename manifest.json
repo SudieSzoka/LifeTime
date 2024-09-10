@@ -8,9 +8,17 @@
     ],
     "host_permissions": [
       "https://source.unsplash.com/*",
-      "https://images.unsplash.com/*"
+      "https://images.unsplash.com/*",
+      "https://picsum.photos/*",
+      "https://random.responsiveimages.io/*"
     ],
-    "chrome_url_overrides": {
-      "newtab": "newtab.html"
-    }  
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_icon": {
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+      }
+    }
 }
