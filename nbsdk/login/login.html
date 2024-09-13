@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, .98);
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: center;
+            width: 300px;
+        }
+
+        .logo {
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .login-prompt {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .google-login-button {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .google-login-button:hover {
+            background-color: #357ae8;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .google-login-button img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        @media (min-width: 550px) {
+            .login-container {
+                border-radius: 10px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="logo">
+        <img id="logo" class="logo" alt="icon">
+    </div>
+    <h1 id="nksdkName"></h1>
+    <p class="login-prompt" data-i18n="nbsdk_a3"></p>
+    <button id="signInBtn" class="google-login-button">
+        <img src="https://www.google.com/favicon.ico" alt="Google">
+        <span data-i18n="nbsdk_a4"></span>
+    </button>
+</div>
+<script src="/nbsdk/config.js"></script>
+<script src="/nbsdk/nbsdk.js"></script>
+<script src="/nbsdk/login/login.js"></script>
+</body>
+</html>

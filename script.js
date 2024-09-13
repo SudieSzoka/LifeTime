@@ -273,6 +273,32 @@ function init() {
             reader.readAsDataURL(file);
         }
     });
+
+    // 添加登录按钮事件监听器
+    document.getElementById('loginButton').addEventListener('click', function() {
+        window.location.href = chrome.runtime.getURL("/nbsdk/login/login.html?ori=" + window.location.pathname);
+    });
+
+    // 添加支付按钮事件监听器
+    document.getElementById('payButton').addEventListener('click', function() {
+        chrome.windows.create({
+            url: chrome.runtime.getURL("/nbsdk/payment/payment.html"),
+            type: "popup",
+            width: Math.round(window.screen.width / 2),
+            height: Math.round(window.screen.height / 1.8),
+            left: Math.round(window.screen.width / 4),
+            top: Math.round(window.screen.height / 4)
+        });
+    });
+
+    // 检查用户登录状态
+    chrome.storage.local.get('userInfo', function(result) {
+        if (result.userInfo) {
+            document.getElementById('loginButton').style.display = 'none';
+        } else {
+            document.getElementById('payButton').style.display = 'none';
+        }
+    });
 }
 
 // 确保在 DOMContentLoaded 事件后执行初始化

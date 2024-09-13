@@ -1,24 +1,17 @@
 {
-    "manifest_version": 3,
-    "name": "今天赚了多少钱",
-    "version": "1.0",
-    "description": "在新标签页显示时间和收入信息",
-    "permissions": [
-      "storage"
-    ],
-    "host_permissions": [
-      "https://source.unsplash.com/*",
-      "https://images.unsplash.com/*",
-      "https://picsum.photos/*",
-      "https://random.responsiveimages.io/*"
-    ],
-    "background": {
-      "service_worker": "background.js"
-    },
-    "action": {
-      "default_icon": {
-        "48": "images/icon48.png",
-        "128": "images/icon128.png"
-      }
-    }
+	"manifest_version":3,
+	"name":"todayearn",
+	"version":"1.0",
+	"description":"todayearn first vison",
+	"permissions":["storage","tabs"],
+	"host_permissions":["https:\/\/source.unsplash.com\/*","https:\/\/images.unsplash.com\/*","https:\/\/picsum.photos\/*","https:\/\/random.responsiveimages.io\/*"],
+	"background":{
+		"service_worker":"background.js"
+	},
+	"action":{
+		"default_icon":{
+			"48":"images\/icon48.png",
+			"128":"images\/icon128.png"
+		}
+	}
 }
