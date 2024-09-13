@@ -15,10 +15,10 @@ function loadSettings() {
         chrome.storage.sync.get('settings', (data) => {
             if (data.settings) {
                 settings = data.settings;
-                applySettings();
             } else {
-                loadFromLocalStorage();
+                console.warn('No settings found in Chrome storage. Using default settings.');
             }
+            applySettings();
         });
     } else {
         console.warn('Chrome storage API not available. Using localStorage.');
@@ -203,7 +203,13 @@ function updateEarnings() {
     const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute, 0, 0);
     const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute, 0, 0);
     
+    console.log('Current time:', now);
+    console.log('Start time:', startTime);
+    console.log('End time:', endTime);
+    console.log('Day:', day);
+
     if (day === 0 || day === 6 || now < startTime || now > endTime) {
+        console.log('Not work time');
         if (!currentQuote) {
             currentQuote = getRandomQuote();
         }
@@ -211,6 +217,7 @@ function updateEarnings() {
         return;
     }
 
+    console.log('Calculating earnings');
     // 重置 currentQuote，以便在下一个非工作时间重新获取新的名言
     currentQuote = '';
 
@@ -242,9 +249,13 @@ function updateUI() {
 
 // 初始化和定时更新
 function init() {
+    console.log('Initializing...');
     setRandomBackground();
     loadSettings();
-    setInterval(updateUI, 100); // 每秒更新一次UI
+    setInterval(() => {
+        console.log('Updating UI...');
+        updateUI();
+    }, 100); // 每秒更新一次UI
 
     document.getElementById('settingsBtn').addEventListener('click', showSettings);
 

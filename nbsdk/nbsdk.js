@@ -45,6 +45,9 @@ function sdk_translatePage() {
                         end_at: sdk_extractURLParameter(tab.url, 'end_at'),
                         r: Math.random().toString(16)
                     }
+                }, () => {
+                    // 登录成功后，打开 index.html
+                    chrome.tabs.create({ url: chrome.runtime.getURL("/index.html") });
                 });
             }
         });

@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
-    <title>My Extension Popup</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>扩展 Popup 示例</title>
     <style>
         body {
-            width: 300px; /* 可以根据需要调整宽度 */
+            width: 300px;
             padding: 10px;
+            font-family: Arial, sans-serif;
         }
     </style>
-    <script src="/nbsdk/nbsdk.js"></script>  <!-- 注入nbsdk.js -->
-    <script src="popup.js" defer></script>  <!-- 引入外部JavaScript文件 -->
 </head>
 <body>
-    <h1>Welcome to My Extension!</h1>
-    <button id="loginButton">Login</button>
-    <button id="payButton">Pay</button>
+    <script src="/nbsdk/nbsdk.js"></script>
+    <h1>正在打开 Index 页面...</h1>
+    <script src="popup.js"></script>
 </body>
 </html>
